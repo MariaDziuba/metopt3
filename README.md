@@ -8,5 +8,4 @@
 ### Методы
 * [GradientMethod](app/src/main/java/com/example/metopt/nmethods/GradientMethod.java)
 
-
 [Отчет](МетодыОптимизации.pdf)
