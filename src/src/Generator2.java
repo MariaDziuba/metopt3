@@ -8,7 +8,7 @@ public class Generator2 extends AbstractGenerator {
             int sum = 0;
             for (int j = 0; j < n; j++) {
                 if (i != j) {
-                    int el = (int) (Math.random() * 4) * -1;
+                    int el = (int) (Math.random() * 5) * -1;
                     sum += el;
                     matrix[i][j] = el;
                 }

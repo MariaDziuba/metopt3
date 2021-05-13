@@ -6,12 +6,12 @@
 * Рындина Валерия M3235
 
 ### Методы
-- [ ] [Прямой метод на основе LU разложения](src/src/method/LUMethod.java)
+- [x] [Прямой метод на основе LU разложения](src/src/method/LUMethod.java)
 - [ ] [Метод Гаусса](src/src/method/LUMethod.java)
 - [ ] [Бонус: метод сопряженных градиентов](src/src/method/LUMethod.java)
 
 ### Виды матриц:
-- [ ] [профильный](src/src/matrix/Profile.java)
+- [x] [профильный](src/src/matrix/Profile.java)
 - [ ] [плотный](src/src/matrix/Profile.java)
 - [ ] [разреженный строчно- столбцовый](src/src/matrix/Profile.java)
 
