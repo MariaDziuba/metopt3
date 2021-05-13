@@ -2,12 +2,73 @@ package src;
 
 public class ProfileSLAEMatrix {
 
-    private final double[] d;
-    private final double[] al;
-    private final double[] au;
-    private final int[] ial;
-    private final int[] iau;
+    private double[] d;
+    private double[] al;
+    private double[] au;
+    private int[] ial;
+    private int[] iau;
     private boolean isLU = false;
+
+    int size;
+
+    public ProfileSLAEMatrix(double[][] matrix) {
+        size = matrix.length;
+        makeD(matrix);
+        makeIal(matrix, size);
+        makeAl(matrix);
+        makeIau(matrix, size);
+        makeAu(matrix);
+    }
+
+    private void makeD(double[][] matrix) {
+        d = new double[size];
+        for (int i = 0; i < size; i++) {
+            d[i] = matrix[i][i];
+        }
+    }
+
+    private void makeAl(double[][] matrix) {
+        al = new double[ial[size]];
+        for (int i = 0; i < size; i++) {
+            int start = ial[i] + i - ial[i + 1];
+            if (ial[i + 1] - ial[i] >= 0) {
+                System.arraycopy(matrix[i], start, al, ial[i], ial[i + 1] - ial[i]);
+            }
+        }
+    }
+
+    private void makeAu(double[][] matrix) {
+        au = new double[iau[size]];
+        for (int i = 0; i < size; i++) {
+            int start = iau[i] + i - iau[i + 1];
+            for (int j = 0; j < iau[i + 1] - iau[i]; j++) {
+                au[iau[i] + j] = matrix[start + j][i];
+            }
+        }
+    }
+
+
+    private int[] makeProfile(double[][] matrix, int size, boolean isBuildIal) {
+        int[] res = new int[size + 1];
+        res[0] = 0;
+        res[1] = 0;
+        for (int i = 1; i < size; i++) {
+            int start = 0;
+            while (start < i && (isBuildIal && matrix[i][start] == 0 || !isBuildIal && matrix[start][i] == 0)) {
+                start++;
+            }
+            res[i + 1] = res[i] + (i - start);
+        }
+        return res;
+    }
+
+    private void makeIal(double[][] matrix, int size) {
+        ial = makeProfile(matrix, size, true);
+    }
+
+    private void makeIau(double[][] matrix, int size) {
+        iau = makeProfile(matrix, size, false);
+    }
 
     public ProfileSLAEMatrix(double[] d, double[] al, int[] ial, double[] au, int[] iau) {
         this.d = d;
@@ -77,7 +138,6 @@ public class ProfileSLAEMatrix {
         int idx = j - (i - size + 1);
         matrix[idxs[i - 1] + 1 + idx] = val;
     }
-
     public void LUDecomposition() {
         if (isLU) {
             throw new UnsupportedOperationException("LU modification was made");

@@ -29,6 +29,8 @@ abstract class AbstractGenerator {
         } catch (IOException ignored) {
         }
         try (BufferedWriter bw = Files.newBufferedWriter(path)) {
+            bw.write(String.valueOf(n));
+            bw.newLine();
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     bw.write(matrix[i][j] + " ");
