@@ -4,3 +4,12 @@ out/*
 
 .DS_Store
 .DS_Store?
+
+src/src/DenseSLAEMatrix.java
+src/src/GaussMethod.java
+src/src/Generator2.java
+src/src/SLAEMethod.java
+src/src/test1
+src/src/test2
+src/src/test3
+src/src/Vector.java
