@@ -7,7 +7,6 @@ out/*
 
 src/src/DenseSLAEMatrix.java
 src/src/GaussMethod.java
-src/src/Generator2.java
 src/src/SLAEMethod.java
 src/src/test1
 src/src/test2

@@ -33,6 +33,8 @@ public class Evaluator {
 
     public void evaluate(BufferedReader br) throws IOException {
         read(br);
+        Generator2 generator2 = new Generator2();
+        generator2.generate();
         print();
     }
 
