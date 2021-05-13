@@ -25,7 +25,7 @@ public class Evaluator {
         for (int i = 0; i < n; i++) {
             String[] input = br.readLine().split(" ");
             for (int j = 0; j < n; j++) {
-                if(input[j] != null && input[j].length() > 0){
+                if (input[j] != null && input[j].length() > 0) {
                     doubles[i][j] = Double.parseDouble(input[j]);
                 }
             }
@@ -34,7 +34,7 @@ public class Evaluator {
         b = new double[n];
         String[] input = br.readLine().split(" ");
         for (int i = 0; i < n; i++) {
-            if(input[i] != null && input[i].length() > 0){
+            if (input[i] != null && input[i].length() > 0) {
                 b[i] = Double.parseDouble(input[i]);
             }
         }
@@ -66,6 +66,24 @@ public class Evaluator {
             }
         } catch (IOException e) {
             System.err.println("IO error");
+        }
+    }
+
+    private static void trySolutionFor1Ex() {
+        double[][] matrix = (new Generator2()).generateMatrix(3, 0);
+        for (double[] row : matrix) {
+            for (double i : row) {
+                System.err.print(i + " " + "\t");
+            }
+            System.err.println();
+        }
+
+        ProfileSLAEMatrix prof = new ProfileSLAEMatrix(matrix);
+        LUMethod method = new LUMethod(prof, (new Generator2()).multiplyOnVectorX(matrix));
+
+        System.err.println();
+        for (double i : method.findSolutions()) {
+            System.err.println(i);
         }
     }
 }

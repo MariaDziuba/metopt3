@@ -82,7 +82,7 @@ public class ProfileSLAEMatrix {
         return d.length;
     }
 
-    public double get(int i, int j)  {
+    public double get(int i, int j) {
         if (isLU) {
             throw new UnsupportedOperationException("LU modification was made");
         }
@@ -133,11 +133,25 @@ public class ProfileSLAEMatrix {
     private void set(double[] matrix, int[] idxs, int i, int j, double val) {
         if (i == j) {
             d[i] = val;
+//          added return:
+            return;
         }
         int size = idxs[i] - idxs[i - 1];
         int idx = j - (i - size + 1);
+//      todo("Index -1 out of bounds for length 9")
         matrix[idxs[i - 1] + 1 + idx] = val;
+//        matrix[-(idxs[i - 1] + 1 + idx)] = val; have "Index 2 out of bounds for length 2"
+
+//      Anton's boys' code:
+/*
+        int prof = idxs[i + 1] - idxs[i];
+        int zeros = i - prof;
+        if (j >= zeros) {
+            matrix[idxs[i] + (j - zeros) - 1] = val;
+        }
+*/
     }
+
     public void LUDecomposition() {
         if (isLU) {
             throw new UnsupportedOperationException("LU modification was made");
