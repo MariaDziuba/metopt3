@@ -32,7 +32,7 @@ public class Generator2 extends AbstractGenerator {
         for (int n = 15; n < 1000; n += 50) {
             for (int k = 0; k < 7; k++) {
                 double[][] matrix = generateMatrix(n, k);
-                printMatrix(matrix, n, k);
+                printMatrix(matrix, true, n, k);
             }
         }
     }

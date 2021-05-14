@@ -19,9 +19,10 @@ abstract class AbstractGenerator {
         return f;
     }
 
-    public void printMatrix(double[][] matrix, int n, int k) {
+    public void printMatrix(double[][] matrix, boolean isSecond, int n, int k) {
         double[] f = multiplyOnVectorX(matrix);
-        String matrixPath =  "src/matrices" + "/2" + "/k" + k + "/n" + n + ".txt";
+        String matrixPath =  isSecond ? "src/matrices" + "/2" + "/k" + k + "/n" + n + ".txt":
+        "src/matrices" + "/3" + "/n" + n + ".txt";
         Path path = Paths.get(matrixPath);
         try {
             Files.createDirectories(path.getParent());
@@ -46,7 +47,7 @@ abstract class AbstractGenerator {
         }
     }
 
-    abstract void generate();
+//    abstract void generate();
 
-    abstract double[][] generateMatrix(int n, int k);
+//    abstract double[][] generateMatrix(int n, int k);
 }

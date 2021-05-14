@@ -52,10 +52,12 @@ public class Evaluator {
     }
 
     public void evaluate(BufferedReader br, BufferedWriter bw) throws IOException {
-        read(br);
-        Generator2 generator2 = new Generator2();
+//        read(br);
+//        Generator2 generator2 = new Generator2();
+//        Generator3 generator3 = new Generator3();
+//        generator3.generate();
 //        generator2.generate();
-        print(bw);
+//        print(bw);
     }
 
     public static void main(String[] args) {
