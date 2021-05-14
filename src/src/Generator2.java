@@ -13,16 +13,9 @@ public class Generator2 extends AbstractGenerator {
                     matrix[i][j] = el;
                 }
             }
+            matrix[i][i] = -sum;
             if (i == 0) {
-                matrix[i][i] = -sum;
-                double pow = 1;
-                for (int p = 0; p < k; p++) {
-                    pow *= 0.1;
-                }
-//                todo("Why this isn't: matrix[i][i] += pow;")
-                matrix[i][i] -= pow * (n - 1);
-            } else {
-                matrix[i][i] = -sum;
+                matrix[i][i] += Math.pow(0.1, k);
             }
         }
         return matrix;
