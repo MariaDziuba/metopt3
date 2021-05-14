@@ -1,4 +1,8 @@
-package src;
+package src.method;
+
+import src.Matrix;
+import src.ProfileSLAEMatrix;
+import src.LU;
 
 public class LUMethod {
 

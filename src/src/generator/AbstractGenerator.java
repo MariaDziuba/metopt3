@@ -1,4 +1,4 @@
-package src;
+package src.generator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

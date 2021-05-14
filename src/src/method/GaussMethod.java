@@ -1,4 +1,4 @@
-package src;
+package src.method;
 
 public class GaussMethod {
 

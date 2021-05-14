@@ -1,6 +1,6 @@
 package src;
 
-public class ProfileSLAEMatrix implements Matrix {
+public class ProfileSLAEMatrix implements Matrix{
 
     private double[] d;
     private double[] al;
@@ -119,7 +119,7 @@ public class ProfileSLAEMatrix implements Matrix {
         return d.length;
     }
 
-    int firstInProfileL(int i) {
+    public int firstInProfileL(int i) {
         return i - (ial[i + 1] - ial[i]);
     }
 

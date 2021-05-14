@@ -1,4 +1,4 @@
-package src;
+package src.generator;
 
 public class Generator3 extends AbstractGenerator {
 
