@@ -7,6 +7,7 @@ public class GaussMethod {
     double[] b;
     int size;
     double[] x;
+    public long actions = 0;
 
     public GaussMethod(double[][] denseMatrix, double[] b, int size) {
         this.denseMatrix = denseMatrix;
@@ -18,9 +19,9 @@ public class GaussMethod {
         if (!makeUpperTriangular()) {
             return null;
         }
-        
+
         backSubstitution();
-        
+
         return x;
     }
 
@@ -32,10 +33,13 @@ public class GaussMethod {
             }
             for (int i = k + 1; i < size; i++) {
                 double coeff = denseMatrix[i][k] / denseMatrix[k][k];
+                actions++;
                 for (int j = k; j < size; j++) {
                     denseMatrix[i][j] -= denseMatrix[k][j] * coeff;
+                    actions ++;
                 }
                 b[i] -= b[k] * coeff;
+                actions ++;
             }
         }
         return true;
@@ -47,10 +51,13 @@ public class GaussMethod {
             x[i] = b[i];
             for (int j = i + 1; j < size; j++) {
                 x[i] -= x[j] * denseMatrix[i][j];
+                actions ++;
             }
             x[i] /= denseMatrix[i][i];
+            actions++;
         }
     }
+
     private void findLineWithLeadElement(int k) {
         int leadElemIdx = k;
         for (int i = k; i < size; i++) {

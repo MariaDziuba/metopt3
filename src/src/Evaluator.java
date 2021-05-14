@@ -49,18 +49,32 @@ public class Evaluator {
         pw.close();
     }
 
-    private void printSecond(PrintWriter pw) {
-        double[] res = gaussMethod.findSolutions();
-        double quadSumRes = 0.0;
-        double quadSum = 0.0;
+    private void printRes(PrintWriter pw, double[] res) {
+        if (res != null) {
+            double quadSumRes = 0.0;
+            double quadSum = 0.0;
 
-        for (int i = 0; i < n; i++) {
-            quadSumRes += Math.pow(i + 1.0 - res[i], 2.0);
-            quadSum += Math.pow(i + 1.0, 2.0);
+            for (int i = 0; i < n; i++) {
+                quadSumRes += Math.pow(i + 1.0 - res[i], 2.0);
+                quadSum += Math.pow(i + 1.0, 2.0);
+            }
+
+            pw.print((String.format("%.14f", Math.sqrt(quadSumRes))) + ", "
+                    + (String.format("%.16f", Math.sqrt(quadSumRes) / Math.sqrt(quadSum))));
         }
+    }
 
-        pw.println((String.format("%.14f", Math.sqrt(quadSumRes))) + ", "
-                + (String.format("%.16f", Math.sqrt(quadSumRes) / Math.sqrt(quadSum))) + ";");
+    private void printSecondThird(PrintWriter pw) {
+        printRes(pw, luMethod.findSolutions());
+    }
+
+    private void printFourth(PrintWriter pw) {
+        double[] res = luMethod.findSolutions();
+        printRes(pw, res);
+        pw.print(", " + luMethod.actions + ", ");
+        res = gaussMethod.findSolutions();
+        printRes(pw, res);
+        pw.print(", " + gaussMethod.actions);
     }
 
     public void evaluate(BufferedReader br, PrintWriter pw) throws IOException {
@@ -69,16 +83,20 @@ public class Evaluator {
 //        Generator3 generator3 = new Generator3();
 //        generator3.generate();
 //        generator2.generate();
-        printSecond(pw);
+        print(pw);
     }
 
 
     public static void main(String[] args) {
-        thirdEx();
+//        firstEx();
+//        secondEx(true);
+//        secondEx(false);
+        fourthEx();
     }
 
     private static void firstEx() {
-        double[][] matrix = (new Generator2()).generateMatrix(3, 0);
+        int n = 3;
+        double[][] matrix = (new Generator2()).generateMatrix(n, 0);
         System.err.println("A:");
         for (double[] row : matrix) {
             for (double i : row) {
@@ -94,8 +112,7 @@ public class Evaluator {
         }
         System.err.println();
 
-        ProfileSLAEMatrix prof = new ProfileSLAEMatrix(matrix);
-        LUMethod method = new LUMethod(prof, b);
+        GaussMethod method = new GaussMethod(matrix, b, n);
 
         System.err.println();
         System.err.println();
@@ -105,33 +122,50 @@ public class Evaluator {
         }
     }
 
-    private static void secondEx() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/out/production/metopt3/second.txt"))) {
+    private static void secondEx(boolean isSecond) {
+        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/out/production/metopt3/second.txt" : "/home/valrun/IdeaProjects/metopt3/out/production/metopt3/third.txt";
+        try (PrintWriter pw = new PrintWriter(new FileWriter(path))) {
             for (int n = 15; n < 1000; n += 50) {
-                for (int k = 0; k < 7; k++) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
-                        pw.print(n + ", " + k + ", ");
-                        (new Evaluator()).evaluate(br, pw);
+                if (!isSecond) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/3/n" + n + ".txt"))) {
+                        pw.print(n + ", ");
+                        Evaluator evaluator = new Evaluator();
+                        evaluator.read(br);
+                        evaluator.printSecondThird(pw);
+                        pw.println(";");
+                    }
+                } else {
+                    for (int k = 0; k < 7; k++) {
+                        try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
+                            pw.print(n + ", " + k + ", ");
+                            Evaluator evaluator = new Evaluator();
+                            evaluator.read(br);
+                            evaluator.printSecondThird(pw);
+                            pw.println(";");
+                        }
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println("IO error");
+            System.err.println("IO error:" + e);
         }
     }
 
-    private static void thirdEx() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/out/production/metopt3/third.txt"))) {
-            for (int n = 15; n < 1000; n += 50) {
-                for (int k = 0; k < 7; k++) {
+    private static void fourthEx() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/out/production/metopt3/fourth.txt"))) {
+            for (int n = 15; n < 1000; n += 100) {
+                for (int k = 0; k < 7; k += 3) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
-                        pw.print(n + "," + k + ",");
-                        (new Evaluator()).evaluate(br, pw);
+                        pw.print(n + ", " + k + ", ");
+                        Evaluator evaluator = new Evaluator();
+                        evaluator.read(br);
+                        evaluator.printFourth(pw);
+                        pw.println(";");
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println("IO error");
+            System.err.println("IO error:" + e);
         }
     }
 }

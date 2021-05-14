@@ -6,11 +6,12 @@ import src.LU;
 
 public class LUMethod {
 
-    double EPS = 1e-14;
+    double EPS = 1e-20;
     ProfileSLAEMatrix matrix;
     double[] b;
     double[] y;
     double[] x;
+    public long actions = 0;
 
     public LUMethod(ProfileSLAEMatrix matrix, double[] b) {
         this.matrix = matrix;
@@ -25,6 +26,7 @@ public class LUMethod {
             y[i] = b[i];
             for (int j = matrix.firstInProfileL(i); j < i; j++) {
                 y[i] -= L.get(i, j) * y[j];
+                actions ++;
             }
         }
     }
@@ -35,8 +37,10 @@ public class LUMethod {
             x[i] = y[i];
             for (int j = matrix.size() - 1; j > i; j--) {
                 x[i] -= U.get(i, j) * x[j];
+                actions ++;
             }
             x[i] /= U.get(i, i);
+            actions++;
         }
     }
 
