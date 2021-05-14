@@ -1,6 +1,6 @@
 package src;
 
-public class ProfileSLAEMatrix {
+public class ProfileSLAEMatrix implements Matrix {
 
     private double[] d;
     private double[] al;

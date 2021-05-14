@@ -1,9 +1,6 @@
 package src;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,18 +12,20 @@ import java.util.stream.Collectors;
 public class Evaluator {
 
     ProfileSLAEMatrix profileMatrix;
+    double[][] denseMatrix;
     double[] b;
     LUMethod luMethod;
+    GaussMethod gaussMethod;
     int n;
 
     private void read(BufferedReader br) throws IOException {
-        int n = Integer.parseInt(br.readLine());
-        double[][] doubles = new double[n][n];
+        n = Integer.parseInt(br.readLine());
+        denseMatrix = new double[n][n];
         for (int i = 0; i < n; i++) {
             String[] input = br.readLine().split(" ");
             for (int j = 0; j < n; j++) {
                 if (input[j] != null && input[j].length() > 0) {
-                    doubles[i][j] = Double.parseDouble(input[j]);
+                    denseMatrix[i][j] = Double.parseDouble(input[j]);
                 }
             }
         }
@@ -39,32 +38,33 @@ public class Evaluator {
             }
         }
 
-        profileMatrix = new ProfileSLAEMatrix(doubles);
+        profileMatrix = new ProfileSLAEMatrix(denseMatrix);
         luMethod = new LUMethod(profileMatrix, b);
+        gaussMethod = new GaussMethod(denseMatrix, b, n);
     }
 
-    private void print(BufferedWriter bw) throws IOException {
-        double[] res = luMethod.findSolutions();
-
+    private void print(PrintWriter pw) {
+        double[] res = gaussMethod.solve();
         for (int i = 0; i < n; i++) {
-            bw.write(res[i] + " ");
+            pw.print(res[i] + " ");
         }
+        pw.close();
     }
 
-    public void evaluate(BufferedReader br, BufferedWriter bw) throws IOException {
-//        read(br);
+    public void evaluate(BufferedReader br, PrintWriter pw) throws IOException {
+        read(br);
 //        Generator2 generator2 = new Generator2();
 //        Generator3 generator3 = new Generator3();
 //        generator3.generate();
 //        generator2.generate();
-//        print(bw);
+        print(pw);
     }
 
     public static void main(String[] args) {
         try (BufferedReader br = Files.newBufferedReader(Paths.get(args[0]))) {
-            try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(args[1]))) {
+            try(PrintWriter pw = new PrintWriter(new FileWriter(args[1]))) {
                 Evaluator evaluator = new Evaluator();
-                evaluator.evaluate(br, bw);
+                evaluator.evaluate(br, pw);
             }
         } catch (IOException e) {
             System.err.println("IO error");
