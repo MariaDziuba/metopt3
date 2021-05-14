@@ -5,173 +5,125 @@ public class ProfileSLAEMatrix implements Matrix {
     private double[] d;
     private double[] al;
     private double[] au;
-    private int[] ial;
-    private int[] iau;
-    private boolean isLU = false;
-
-    int size;
+    private int[] ial, iau;
 
     public ProfileSLAEMatrix(double[][] matrix) {
-        size = matrix.length;
-        makeD(matrix);
+        int size = matrix.length;
+
+        makeD(matrix, size);
         makeIal(matrix, size);
-        makeAl(matrix);
+        makeAl(matrix, size);
         makeIau(matrix, size);
-        makeAu(matrix);
+        makeAu(matrix, size);
     }
 
-    private void makeD(double[][] matrix) {
+    private void makeAl(double[][] matrix, int size) {
+        al = new double[ial[size]];
+        for (int i = 0; i < size; i++) {
+            int beginning = ial[i] + i - ial[i + 1];
+            if (ial[i + 1] - ial[i] >= 0) {
+                System.arraycopy(matrix[i], beginning, al, ial[i], ial[i + 1] - ial[i]);
+            }
+        }
+    }
+
+    private void makeAu(double[][] matrix, int size) {
+        au = new double[iau[size]];
+        for (int i = 0; i < size; i++) {
+            int beginning = iau[i] + i - iau[i + 1];
+            for (int j = 0; j < iau[i + 1] - iau[i]; j++) {
+                au[iau[i] + j] = matrix[beginning + j][i];
+            }
+        }
+    }
+
+    private void makeD(double[][] matrix, int size) {
         d = new double[size];
         for (int i = 0; i < size; i++) {
             d[i] = matrix[i][i];
         }
     }
 
-    private void makeAl(double[][] matrix) {
-        al = new double[ial[size]];
-        for (int i = 0; i < size; i++) {
-            int start = ial[i] + i - ial[i + 1];
-            if (ial[i + 1] - ial[i] >= 0) {
-                System.arraycopy(matrix[i], start, al, ial[i], ial[i + 1] - ial[i]);
-            }
-        }
-    }
-
-    private void makeAu(double[][] matrix) {
-        au = new double[iau[size]];
-        for (int i = 0; i < size; i++) {
-            int start = iau[i] + i - iau[i + 1];
-            for (int j = 0; j < iau[i + 1] - iau[i]; j++) {
-                au[iau[i] + j] = matrix[start + j][i];
-            }
-        }
-    }
-
-
-    private int[] makeProfile(double[][] matrix, int size, boolean isBuildIal) {
+    private int[] makeProfile(double[][] matrix, int size, boolean isIal) {
         int[] res = new int[size + 1];
         res[0] = 0;
         res[1] = 0;
         for (int i = 1; i < size; i++) {
-            int start = 0;
-            while (start < i && (isBuildIal && matrix[i][start] == 0 || !isBuildIal && matrix[start][i] == 0)) {
-                start++;
+            int beginning = 0;
+            while (beginning < i && (isIal && matrix[i][beginning] == 0 || !isIal && matrix[beginning][i] == 0)) {
+                beginning++;
             }
-            res[i + 1] = res[i] + (i - start);
+            res[i + 1] = res[i] + (i - beginning);
         }
         return res;
     }
+
 
     private void makeIal(double[][] matrix, int size) {
         ial = makeProfile(matrix, size, true);
     }
 
+
     private void makeIau(double[][] matrix, int size) {
         iau = makeProfile(matrix, size, false);
     }
 
-    public ProfileSLAEMatrix(double[] d, double[] al, int[] ial, double[] au, int[] iau) {
-        this.d = d;
-        this.al = al;
-        this.ial = ial;
-        this.au = au;
-        this.iau = iau;
+
+    @Override
+    public double get(int i, int j) {
+        if (i == j) {
+            return d[i];
+        }
+        if (i < j) {
+            int beginning = j - (iau[j + 1] - iau[j]);
+            if (i < beginning) {
+                return 0;
+            } else {
+                return au[iau[j] + i - beginning];
+            }
+        } else {
+            int beginning = i - (ial[i + 1] - ial[i]);
+            if (j < beginning) {
+                return 0;
+            } else {
+                return al[ial[i] + j - beginning];
+            }
+        }
     }
 
+    @Override
+    public void set(int i, int j, double val) {
+        if (i == j) {
+            d[i] = val;
+            return;
+        }
+        if (i < j) {
+            int beginning = j - (iau[j + 1] - iau[j]);
+            if (i < beginning) {
+                throw new IllegalArgumentException("Is not in profile");
+            } else {
+                au[iau[j] + i - beginning] = val;
+            }
+        } else {
+            int beginning = i - (ial[i + 1] - ial[i]);
+            if (j < beginning) {
+                throw new IllegalArgumentException("Is not in profile");
+            } else {
+                al[ial[i] + j - beginning] = val;
+            }
+        }
+    }
+
+    @Override
     public int size() {
         return d.length;
     }
 
-    public double get(int i, int j) {
-        if (isLU) {
-            throw new UnsupportedOperationException("LU modification was made");
-        }
-        if (i == j) {
-            return d[i];
-        }
-        if (i > j) {
-            return get(al, ial, i, j);
-        }
-        return get(au, iau, j, i);
+    int firstInProfileL(int i) {
+        return i - (ial[i + 1] - ial[i]);
     }
 
-    public double getFromL(int i, int j) {
-        if (!isLU) {
-            throw new UnsupportedOperationException("LU modification wasn't made");
-        }
-        if (i == j) {
-            return d[i];
-        }
-        if (i > j) {
-            return get(al, ial, i, j);
-        }
-        return 0.0;
-    }
-
-    public double getFromU(int i, int j) {
-        if (!isLU) {
-            throw new UnsupportedOperationException("LU modification wasn't made");
-        }
-        if (i == j) {
-            return 1.0;
-        }
-        if (i < j) {
-            return get(au, iau, j, i);
-        }
-        return 0.0;
-    }
-
-    private double get(double[] matrix, int[] idxs, int i, int j) {
-        int size = idxs[i] - idxs[i - 1];
-        int idx = j - (i - size + 1);
-        if (idx < 0) {
-            return 0;
-        }
-        return matrix[idxs[i - 1] + 1 + idx];
-    }
-
-    private void set(double[] matrix, int[] idxs, int i, int j, double val) {
-        if (i == j) {
-            d[i] = val;
-//          added return:
-            return;
-        }
-        int size = idxs[i] - idxs[i - 1];
-        int idx = j - (i - size + 1);
-//      todo("Index -1 out of bounds for length 9")
-        matrix[idxs[i - 1] + 1 + idx] = val;
-//        matrix[-(idxs[i - 1] + 1 + idx)] = val; have "Index 2 out of bounds for length 2"
-
-//      Anton's boys' code:
-/*
-        int prof = idxs[i + 1] - idxs[i];
-        int zeros = i - prof;
-        if (j >= zeros) {
-            matrix[idxs[i] + (j - zeros) - 1] = val;
-        }
-*/
-    }
-
-    public void LUDecomposition() {
-        if (isLU) {
-            throw new UnsupportedOperationException("LU modification was made");
-        }
-        for (int i = 1; i < size(); i++) {
-            for (int j = 0; j <= i; j++) {
-                double sum = 0;
-                for (int k = 0; k < j; k++) {
-                    sum += this.get(i, k) * this.get(k, j);
-                }
-                set(al, ial, i, j, this.get(i, j) - sum);
-            }
-            for (int j = 0; j < i; j++) {
-                double sum = 0;
-                for (int k = 0; k < j; k++) {
-                    sum += this.get(j, k) * this.get(k, i);
-                }
-                set(au, iau, i, j, (this.get(j, i) - sum) / this.get(j, j));
-            }
-        }
-        this.isLU = true;
+    int firstInProfileU(int i) {
+        return i - (iau[i + 1] - iau[i]);
     }
 }

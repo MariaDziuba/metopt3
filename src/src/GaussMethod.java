@@ -14,7 +14,7 @@ public class GaussMethod {
         this.size = size;
     }
 
-    public double[] solve() {
+    public double[] findSolutions() {
         if (!makeUpperTriangular()) {
             return null;
         }

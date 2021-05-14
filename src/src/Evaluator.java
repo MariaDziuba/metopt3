@@ -2,12 +2,7 @@ package src;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Evaluator {
 
@@ -44,7 +39,8 @@ public class Evaluator {
     }
 
     private void print(PrintWriter pw) {
-        double[] res = gaussMethod.solve();
+       // double[] res = gaussMethod.solve();
+        double[] res = luMethod.findSolutions();
         for (int i = 0; i < n; i++) {
             pw.print(res[i] + " ");
         }

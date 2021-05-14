@@ -1,6 +1,8 @@
 package src;
 
 public class LUMethod {
+
+    double EPS = 1e-14;
     ProfileSLAEMatrix matrix;
     double[] b;
     double[] y;
@@ -13,37 +15,40 @@ public class LUMethod {
         this.x = new double[matrix.size()];
     }
 
-
     // Ly = b
-    private void findY() {
-        int size = matrix.size();
-        for (int i = 0; i < size; i++) {
-            double sum = 0;
-            for (int p = 0; p < i; p++) {
-                sum += matrix.getFromL(i, p) * y[p];
+    private void findY(Matrix L) {
+        for (int i = 0; i < matrix.size(); i++) {
+            y[i] = b[i];
+            for (int j = matrix.firstInProfileL(i); j < i; j++) {
+                y[i] -= L.get(i, j) * y[j];
             }
-            y[i] = b[i] - sum;
         }
     }
 
     // Ux = y
-    private void findX() {
-        int size = matrix.size();
-        double[] x = new double[size];
-        for (int i = 0; i < size; i++) {
-            double sum = 0;
-            for (int p = 0; p < i; p++) {
-                sum += matrix.getFromU(size - i - 1, size - p - 1) * x[size - p - 1];
+    private void findX(Matrix U) {
+        for (int i = matrix.size() - 1; i > -1; i--) {
+            x[i] = y[i];
+            for (int j = matrix.size() - 1; j > i; j--) {
+                x[i] -= U.get(i, j) * x[j];
             }
-            x[size - i - 1] = (y[size - i - 1] - sum) / matrix.getFromU(size - i - 1, size - i - 1);
+            x[i] /= U.get(i, i);
         }
     }
 
     public double[] findSolutions() {
-        matrix.LUDecomposition();
+        Matrix[] LU = new LU(matrix).getLU();
+        Matrix L = LU[0];
+        Matrix U = LU[1];
 
-        findY();
-        findX();
+        for (int i = 0; i < matrix.size(); i++) {
+            if (Math.abs(U.get(i, i)) < EPS) {
+                return null;
+            }
+        }
+
+        findY(L);
+        findX(U);
 
         return x;
     }
