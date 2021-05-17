@@ -1,6 +1,7 @@
 package src;
 
 import src.generator.*;
+import src.matrix.ProfileSLAEMatrix;
 import src.method.*;
 
 import java.io.*;
@@ -71,10 +72,10 @@ public class Evaluator {
     private void printFourth(PrintWriter pw) {
         double[] res = luMethod.findSolutions();
         printRes(pw, res);
-        pw.print(", " + luMethod.actions + ", ");
+        pw.print(", " + luMethod.getActions() + ", ");
         res = gaussMethod.findSolutions();
         printRes(pw, res);
-        pw.print(", " + gaussMethod.actions);
+        pw.print(", " + gaussMethod.getActions());
     }
 
     public void evaluate(BufferedReader br, PrintWriter pw) throws IOException {
@@ -88,15 +89,15 @@ public class Evaluator {
 
 
     public static void main(String[] args) {
-//        firstEx();
+        firstEx();
 //        secondEx(true);
 //        secondEx(false);
-        fourthEx();
+//        fourthEx();
     }
 
     private static void firstEx() {
         int n = 3;
-        double[][] matrix = (new Generator2()).generateMatrix(n, 0);
+        double[][] matrix = (new Generator3()).generateMatrix(n);
         System.err.println("A:");
         for (double[] row : matrix) {
             for (double i : row) {
@@ -106,13 +107,13 @@ public class Evaluator {
         }
 
         System.err.println("b:");
-        double[] b = (new Generator2()).multiplyOnVectorX(matrix);
+        double[] b = (new Generator3()).multiplyOnVectorX(matrix);
         for (double i : b) {
             System.err.print(i + " " + "\t");
         }
         System.err.println();
 
-        GaussMethod method = new GaussMethod(matrix, b, n);
+        Method method = new LUMethod(new ProfileSLAEMatrix(matrix), b);
 
         System.err.println();
         System.err.println();

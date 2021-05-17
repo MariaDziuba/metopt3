@@ -1,4 +1,4 @@
-package src;
+package src.matrix;
 
 public class ProfileSLAEMatrix implements Matrix{
 

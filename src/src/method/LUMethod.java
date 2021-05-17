@@ -1,17 +1,17 @@
 package src.method;
 
-import src.Matrix;
-import src.ProfileSLAEMatrix;
-import src.LU;
+import src.matrix.Matrix;
+import src.matrix.ProfileSLAEMatrix;
+import src.matrix.LU;
 
-public class LUMethod {
+public class LUMethod implements Method{
 
     double EPS = 1e-20;
     ProfileSLAEMatrix matrix;
     double[] b;
     double[] y;
     double[] x;
-    public long actions = 0;
+    long actions = 0;
 
     public LUMethod(ProfileSLAEMatrix matrix, double[] b) {
         this.matrix = matrix;
@@ -44,6 +44,7 @@ public class LUMethod {
         }
     }
 
+    @Override
     public double[] findSolutions() {
         Matrix[] LU = new LU(matrix).getLU();
         Matrix L = LU[0];
@@ -59,5 +60,10 @@ public class LUMethod {
         findX(U);
 
         return x;
+    }
+
+    @Override
+    public long getActions() {
+        return actions;
     }
 }

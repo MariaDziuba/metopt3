@@ -1,4 +1,4 @@
-package src;
+package src.matrix;
 
 public interface Matrix {
     double get(int i, int j);

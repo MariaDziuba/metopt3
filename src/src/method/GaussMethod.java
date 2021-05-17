@@ -1,13 +1,13 @@
 package src.method;
 
-public class GaussMethod {
-
+public class GaussMethod implements Method{
     double EPS = 1e-14;
+    long actions = 0;
+    int size;
+
     double[][] denseMatrix;
     double[] b;
-    int size;
     double[] x;
-    public long actions = 0;
 
     public GaussMethod(double[][] denseMatrix, double[] b, int size) {
         this.denseMatrix = denseMatrix;
@@ -15,6 +15,7 @@ public class GaussMethod {
         this.size = size;
     }
 
+    @Override
     public double[] findSolutions() {
         if (!makeUpperTriangular()) {
             return null;
@@ -23,6 +24,11 @@ public class GaussMethod {
         backSubstitution();
 
         return x;
+    }
+
+    @Override
+    public long getActions() {
+        return actions;
     }
 
     boolean makeUpperTriangular() {
