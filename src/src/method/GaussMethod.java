@@ -16,6 +16,7 @@ public class GaussMethod implements Method{
 
     @Override
     public double[] findSolutions() {
+        actions = 0;
         if (!makeUpperTriangular()) {
             return null;
         }

@@ -2,20 +2,33 @@ package src;
 
 import src.generator.*;
 import src.matrix.ProfileSLAEMatrix;
+import src.matrix.SparseSLAEMatrix;
 import src.method.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Evaluator {
 
     ProfileSLAEMatrix profileMatrix;
+    SparseSLAEMatrix sparseSLAEMatrix;
     double[][] denseMatrix;
     double[] b;
+
+
     LUMethod luMethod;
     GaussMethod gaussMethod;
+    ConjugateMethod conjugateMethod;
     int n;
+
+    private static void generateMatrixes() {
+        List<AbstractGenerator> generators = List.of(new Generator(), new Generator2(), new Generator3(), new Generator52(), new Generator53());
+        for (AbstractGenerator generator : generators) {
+            generator.generate();
+        }
+    }
 
     private void read(BufferedReader br) throws IOException {
         n = Integer.parseInt(br.readLine());
@@ -38,8 +51,11 @@ public class Evaluator {
         }
 
         profileMatrix = new ProfileSLAEMatrix(denseMatrix);
+        sparseSLAEMatrix = new SparseSLAEMatrix(denseMatrix);
+
         luMethod = new LUMethod(profileMatrix, b);
         gaussMethod = new GaussMethod(denseMatrix, b, n);
+        conjugateMethod = new ConjugateMethod(sparseSLAEMatrix, b);
     }
 
     private void print(PrintWriter pw) {
@@ -78,53 +94,66 @@ public class Evaluator {
         pw.print(", " + gaussMethod.getActions());
     }
 
+    private void printFifth1(PrintWriter pw) {
+        printRes(pw, conjugateMethod.findSolutions());
+    }
+
+    private void printFifth2(PrintWriter pw) {
+        printRes(pw, conjugateMethod.findSolutions());
+//        todo(+ cond(A))
+    }
+
     public void evaluate(BufferedReader br, PrintWriter pw) throws IOException {
         read(br);
-//        Generator2 generator2 = new Generator2();
-//        Generator3 generator3 = new Generator3();
-//        generator3.generate();
-//        generator2.generate();
         print(pw);
     }
 
 
     public static void main(String[] args) {
-        firstEx();
+//        generateMatrixes();
+//        firstEx();
 //        secondEx(true);
 //        secondEx(false);
 //        fourthEx();
+        fifthEx234(2);
+        fifthEx234(3);
+        fifthEx234(4);
     }
 
     private static void firstEx() {
         int n = 3;
-        double[][] matrix = (new Generator3()).generateMatrix(n);
-        System.err.println("A:");
-        for (double[] row : matrix) {
-            for (double i : row) {
+        List<AbstractGenerator> generators = List.of(new Generator2(), new Generator3(), new Generator52(), new Generator53());
+        for (AbstractGenerator generator : generators) {
+            double[][] matrix = generator.generateMatrix(n);
+            System.err.println("A:");
+            for (double[] row : matrix) {
+                for (double i : row) {
+                    System.err.print(i + " " + "\t");
+                }
+                System.err.println();
+            }
+
+            System.err.println("b:");
+            double[] b = generator.multiplyOnVectorX(matrix);
+            for (double i : b) {
                 System.err.print(i + " " + "\t");
             }
             System.err.println();
+
+            Method method = new LUMethod(new ProfileSLAEMatrix(matrix), b);
+
+            System.err.println();
+            System.err.println();
+            double[] res = method.findSolutions();
+            for (double i : res) {
+                System.err.println(i);
+            }
         }
 
-        System.err.println("b:");
-        double[] b = (new Generator3()).multiplyOnVectorX(matrix);
-        for (double i : b) {
-            System.err.print(i + " " + "\t");
-        }
-        System.err.println();
-
-        Method method = new LUMethod(new ProfileSLAEMatrix(matrix), b);
-
-        System.err.println();
-        System.err.println();
-        double[] res = method.findSolutions();
-        for (double i : res) {
-            System.err.println(i);
-        }
     }
 
     private static void secondEx(boolean isSecond) {
-        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/out/production/metopt3/second.txt" : "/home/valrun/IdeaProjects/metopt3/out/production/metopt3/third.txt";
+        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/src/matrices/result/second.txt" : "/home/valrun/IdeaProjects/metopt3/src/matrices/result/third.txt";
         try (PrintWriter pw = new PrintWriter(new FileWriter(path))) {
             for (int n = 15; n < 1000; n += 50) {
                 if (!isSecond) {
@@ -153,7 +182,7 @@ public class Evaluator {
     }
 
     private static void fourthEx() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/out/production/metopt3/fourth.txt"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fourth.txt"))) {
             for (int n = 15; n < 1000; n += 100) {
                 for (int k = 0; k < 7; k += 3) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
@@ -164,6 +193,53 @@ public class Evaluator {
                         pw.println(";");
                     }
                 }
+            }
+        } catch (IOException e) {
+            System.err.println("IO error:" + e);
+        }
+    }
+
+    private static void fifthEx1() {
+//        todo(Is it right NaN in result)
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fifth1.txt"))) {
+            for (int n = 15; n < 500; n += 50) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/0/n" + n + ".txt"))) {
+                        pw.print(n + ", ");
+                        Evaluator evaluator = new Evaluator();
+                        evaluator.read(br);
+                        evaluator.printFifth1(pw);
+                        pw.println(";");
+                    }
+            }
+        } catch (IOException e) {
+            System.err.println("IO error:" + e);
+        }
+    }
+
+    private static void fifthEx234(int ex) {
+        int folder;
+        switch (ex) {
+            case 2:
+                folder = 52;
+                break;
+            case 3:
+                folder = 53;
+                break;
+            case 4:
+                folder = 3;
+                break;
+            default:
+                return;
+        }
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fifth" + ex + ".txt"))) {
+            for (int n = 15; n < 1000; n += 50) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/" + folder + "/n" + n + ".txt"))) {
+                        pw.print(n + ", ");
+                        Evaluator evaluator = new Evaluator();
+                        evaluator.read(br);
+                        evaluator.printFifth2(pw);
+                        pw.println(";");
+                    }
             }
         } catch (IOException e) {
             System.err.println("IO error:" + e);

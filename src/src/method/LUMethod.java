@@ -46,6 +46,7 @@ public class LUMethod implements Method{
 
     @Override
     public double[] findSolutions() {
+        actions = 0;
         Matrix[] LU = new LU(profileMatrix).getLU();
         Matrix L = LU[0];
         Matrix U = LU[1];

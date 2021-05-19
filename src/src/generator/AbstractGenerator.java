@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-abstract class AbstractGenerator {
+public abstract class AbstractGenerator {
 
     public double[] multiplyOnVectorX(double[][] matrix) {
         int n = matrix.length;
@@ -19,10 +19,9 @@ abstract class AbstractGenerator {
         return f;
     }
 
-    public void printMatrix(double[][] matrix, boolean isSecond, int n, int k) {
+    public void printMatrix(double[][] matrix, int exercise, int n, int k) {
         double[] f = multiplyOnVectorX(matrix);
-        String matrixPath =  isSecond ? "src/matrices" + "/2" + "/k" + k + "/n" + n + ".txt":
-        "src/matrices" + "/3" + "/n" + n + ".txt";
+        String matrixPath =  "src/matrices" + "/" + exercise + (exercise == 2 ? "/k" + k : "") + "/n" + n + ".txt";
         Path path = Paths.get(matrixPath);
         try {
             Files.createDirectories(path.getParent());
@@ -47,5 +46,6 @@ abstract class AbstractGenerator {
         }
     }
 
-    abstract void generate();
+    public abstract void generate();
+    public abstract double[][] generateMatrix(int n);
 }

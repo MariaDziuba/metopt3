@@ -1,6 +1,9 @@
 package src.generator;
 
 public class Generator2 extends AbstractGenerator {
+    public double[][] generateMatrix(int n) {
+        return generateMatrix(n, 0);
+    }
 
     public double[][] generateMatrix(int n, int k) {
         double[][] matrix = new double[n][n];
@@ -25,7 +28,7 @@ public class Generator2 extends AbstractGenerator {
         for (int n = 15; n < 1000; n += 50) {
             for (int k = 0; k < 7; k++) {
                 double[][] matrix = generateMatrix(n, k);
-                printMatrix(matrix, true, n, k);
+                printMatrix(matrix, 2, n, k);
             }
         }
     }

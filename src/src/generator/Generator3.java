@@ -16,7 +16,7 @@ public class Generator3 extends AbstractGenerator {
     public void generate() {
         for (int n = 15; n < 1000; n += 50) {
             double[][] matrix = generateMatrix(n);
-            printMatrix(matrix, false, n, -1);
+            printMatrix(matrix, 3, n, -1);
         }
     }
 }
