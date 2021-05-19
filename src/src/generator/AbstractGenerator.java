@@ -47,7 +47,5 @@ abstract class AbstractGenerator {
         }
     }
 
-//    abstract void generate();
-
-//    abstract double[][] generateMatrix(int n, int k);
+    abstract void generate();
 }

@@ -1,7 +1,6 @@
 package src.method;
 
 public class GaussMethod implements Method{
-    double EPS = 1e-14;
     long actions = 0;
     int size;
 
