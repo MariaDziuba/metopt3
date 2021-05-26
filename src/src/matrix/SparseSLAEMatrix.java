@@ -3,7 +3,6 @@ package src.matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SparseSLAEMatrix implements Matrix{
 
     private double EPS = 1e-14;

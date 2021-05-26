@@ -24,7 +24,7 @@ public class Evaluator {
     int n;
 
     private static void generateMatrixes() {
-        List<AbstractGenerator> generators = List.of(new Generator(), new Generator2(), new Generator3(), new Generator52(), new Generator53());
+        List<AbstractGenerator> generators = List.of(new Generator()/*, new Generator2(), new Generator3(), new Generator52(), new Generator53()*/);
         for (AbstractGenerator generator : generators) {
             generator.generate();
         }
@@ -66,7 +66,7 @@ public class Evaluator {
         pw.close();
     }
 
-    private void printRes(PrintWriter pw, double[] res) {
+    private void printRes(PrintWriter pw, double[] res, String format) {
         if (res != null) {
             double quadSumRes = 0.0;
             double quadSum = 0.0;
@@ -76,31 +76,52 @@ public class Evaluator {
                 quadSum += Math.pow(i + 1.0, 2.0);
             }
 
-            pw.print((String.format("%.14f", Math.sqrt(quadSumRes))) + ", "
-                    + (String.format("%.16f", Math.sqrt(quadSumRes) / Math.sqrt(quadSum))));
+            pw.print((String.format(format, Math.sqrt(quadSumRes))) + ", "
+                    + (String.format(format, Math.sqrt(quadSumRes) / Math.sqrt(quadSum))));
         }
     }
 
-    private void printSecondThird(PrintWriter pw) {
-        printRes(pw, luMethod.findSolutions());
+    private void printSecondThird(PrintWriter pw, String format) {
+        printRes(pw, luMethod.findSolutions(), format);
     }
 
     private void printFourth(PrintWriter pw) {
         double[] res = luMethod.findSolutions();
-        printRes(pw, res);
+        printRes(pw, res, "%.16f");
         pw.print(", " + luMethod.getActions() + ", ");
         res = gaussMethod.findSolutions();
-        printRes(pw, res);
+        printRes(pw, res, "%.16f");
         pw.print(", " + gaussMethod.getActions());
     }
 
     private void printFifth1(PrintWriter pw) {
-        printRes(pw, conjugateMethod.findSolutions());
+        printRes(pw, conjugateMethod.findSolutions(), "%.1f");
     }
 
-    private void printFifth2(PrintWriter pw) {
-        printRes(pw, conjugateMethod.findSolutions());
-//        todo(+ cond(A))
+    private void printFifth2(PrintWriter pw, String format) {
+        double[] res = conjugateMethod.findSolutions();
+        if (res != null) {
+            double[] Ax = new Generator().multiplyOnVector(denseMatrix, res);
+
+            double quadSumXRes = 0.0;
+            double quadSumX = 0.0;
+
+            double quadSumFRes = 0.0;
+            double quadSumF = 0.0;
+
+            for (int i = 0; i < n; i++) {
+                quadSumXRes += Math.pow(i + 1.0 - res[i], 2.0);
+                quadSumX += Math.pow(i + 1.0, 2.0);
+
+                quadSumFRes += Math.pow(b[i] - Ax[i], 2.0);
+                quadSumF += Math.pow(b[i], 2.0);
+            }
+
+            pw.print(conjugateMethod.getActions() + ", ");
+            pw.print((String.format(format, Math.sqrt(quadSumXRes))) + ", ");
+            pw.print((String.format(format, Math.sqrt(quadSumXRes) / Math.sqrt(quadSumX))) + ", ");
+            pw.print((String.format(format, (Math.sqrt(quadSumXRes) * Math.sqrt(quadSumF)) / (Math.sqrt(quadSumX) * Math.sqrt(quadSumFRes)))));
+        }
     }
 
     public void evaluate(BufferedReader br, PrintWriter pw) throws IOException {
@@ -110,14 +131,15 @@ public class Evaluator {
 
 
     public static void main(String[] args) {
-//        generateMatrixes();
+        generateMatrixes();
 //        firstEx();
 //        secondEx(true);
 //        secondEx(false);
 //        fourthEx();
-        fifthEx234(2);
-        fifthEx234(3);
-        fifthEx234(4);
+        fifthEx1();
+//        fifthEx234(2);
+//        fifthEx234(3);
+//        fifthEx234(4);
     }
 
     private static void firstEx() {
@@ -153,7 +175,7 @@ public class Evaluator {
     }
 
     private static void secondEx(boolean isSecond) {
-        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/src/matrices/result/second.txt" : "/home/valrun/IdeaProjects/metopt3/src/matrices/result/third.txt";
+        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/src/result/second.txt" : "/home/valrun/IdeaProjects/metopt3/src/result/third.txt";
         try (PrintWriter pw = new PrintWriter(new FileWriter(path))) {
             for (int n = 15; n < 1000; n += 50) {
                 if (!isSecond) {
@@ -161,7 +183,7 @@ public class Evaluator {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
-                        evaluator.printSecondThird(pw);
+                        evaluator.printSecondThird(pw, "%.16f");
                         pw.println(";");
                     }
                 } else {
@@ -170,7 +192,7 @@ public class Evaluator {
                             pw.print(n + ", " + k + ", ");
                             Evaluator evaluator = new Evaluator();
                             evaluator.read(br);
-                            evaluator.printSecondThird(pw);
+                            evaluator.printSecondThird(pw, "%.4f");
                             pw.println(";");
                         }
                     }
@@ -182,7 +204,7 @@ public class Evaluator {
     }
 
     private static void fourthEx() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fourth.txt"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fourth.txt"))) {
             for (int n = 15; n < 1000; n += 100) {
                 for (int k = 0; k < 7; k += 3) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
@@ -201,8 +223,8 @@ public class Evaluator {
 
     private static void fifthEx1() {
 //        todo(Is it right NaN in result)
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fifth1.txt"))) {
-            for (int n = 15; n < 500; n += 50) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth1.txt"))) {
+            for (int n = 5; n < 55; n += 5) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/0/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
@@ -231,13 +253,13 @@ public class Evaluator {
             default:
                 return;
         }
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/matrices/result/fifth" + ex + ".txt"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth" + ex + ".txt"))) {
             for (int n = 15; n < 1000; n += 50) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/" + folder + "/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
-                        evaluator.printFifth2(pw);
+                        evaluator.printFifth2(pw, "%.6f");
                         pw.println(";");
                     }
             }

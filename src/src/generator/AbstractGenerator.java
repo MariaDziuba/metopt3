@@ -19,6 +19,17 @@ public abstract class AbstractGenerator {
         return f;
     }
 
+    public double[] multiplyOnVector(double[][] matrix, double[] vector) {
+        int n = matrix.length;
+        double[] f = new double[n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                f[i] += vector[j] * matrix[i][j];
+            }
+        }
+        return f;
+    }
+
     public void printMatrix(double[][] matrix, int exercise, int n, int k) {
         double[] f = multiplyOnVectorX(matrix);
         String matrixPath =  "src/matrices" + "/" + exercise + (exercise == 2 ? "/k" + k : "") + "/n" + n + ".txt";
