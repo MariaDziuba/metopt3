@@ -24,7 +24,7 @@ public class Evaluator {
     int n;
 
     private static void generateMatrixes() {
-        List<AbstractGenerator> generators = List.of(new Generator()/*, new Generator2(), new Generator3(), new Generator52(), new Generator53()*/);
+        List<AbstractGenerator> generators = List.of(/*new Generator(), new Generator2(), new Generator3(), new Generator52(),*/ new Generator53());
         for (AbstractGenerator generator : generators) {
             generator.generate();
         }
@@ -131,12 +131,12 @@ public class Evaluator {
 
 
     public static void main(String[] args) {
-        generateMatrixes();
-//        firstEx();
+//        generateMatrixes();
+        firstEx();
 //        secondEx(true);
 //        secondEx(false);
 //        fourthEx();
-        fifthEx1();
+//        fifthEx1();
 //        fifthEx234(2);
 //        fifthEx234(3);
 //        fifthEx234(4);
@@ -144,7 +144,7 @@ public class Evaluator {
 
     private static void firstEx() {
         int n = 3;
-        List<AbstractGenerator> generators = List.of(new Generator2(), new Generator3(), new Generator52(), new Generator53());
+        List<AbstractGenerator> generators = List.of(new Generator2()/*, new Generator3(), new Generator52(), new Generator53()*/);
         for (AbstractGenerator generator : generators) {
             double[][] matrix = generator.generateMatrix(n);
             System.err.println("A:");
@@ -162,7 +162,7 @@ public class Evaluator {
             }
             System.err.println();
 
-            Method method = new LUMethod(new ProfileSLAEMatrix(matrix), b);
+            Method method = new ConjugateMethod(new SparseSLAEMatrix(matrix), b);
 
             System.err.println();
             System.err.println();
@@ -254,8 +254,9 @@ public class Evaluator {
                 return;
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth" + ex + ".txt"))) {
-            for (int n = 15; n < 1000; n += 50) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/" + folder + "/n" + n + ".txt"))) {
+            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+            for (int n : sizes) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/out/matrices/" + folder + "/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);

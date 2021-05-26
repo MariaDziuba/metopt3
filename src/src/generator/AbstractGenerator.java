@@ -57,6 +57,46 @@ public abstract class AbstractGenerator {
         }
     }
 
+    public BufferedWriter getBW(int exercise, int n, int k) {
+        String matrixPath =  "src/matrices" + "/" + exercise + (exercise == 2 ? "/k" + k : "") + "/n" + n + ".txt";
+        Path path = Paths.get(matrixPath);
+        try {
+            Files.createDirectories(path.getParent());
+            Files.createFile(path);
+        } catch (IOException ignored) {
+        }
+        BufferedWriter bw;
+        try {
+            bw = Files.newBufferedWriter(path);
+            bw.write(String.valueOf(n));
+            bw.newLine();
+            return bw;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void writeLine(BufferedWriter bw, double[] vector) {
+        try {
+            for (double v : vector) {
+                bw.write(v + " ");
+            }
+            bw.write("\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeBW(BufferedWriter bw) {
+        try {
+            bw.write("\n");
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public abstract void generate();
     public abstract double[][] generateMatrix(int n);
 }

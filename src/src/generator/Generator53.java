@@ -23,7 +23,7 @@ public class Generator53 extends AbstractGenerator {
     }
 
     public void generate() {
-        for (int n = 15; n < 1000; n += 50) {
+        for (int n = 15; n < 10500; n += 500) {
             double[][] matrix = generateMatrix(n);
             printMatrix(matrix, 53, n, -1);
         }

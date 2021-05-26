@@ -1,29 +1,33 @@
 package src.generator;
 
+import java.io.BufferedWriter;
+
 public class Generator52 extends AbstractGenerator {
     public double[][] generateMatrix(int n) {
-        double[][] matrix = new double[n][n];
+        double[] matrix = new double[n];
+        BufferedWriter bw = getBW(52, n, -1);
         for (int i = 0; i < n; i++) {
             int sum = 0;
             for (int j = 0; j < n; j++) {
                 if (i != j) {
                     int el = (int) (Math.random() * 5) * -1;
                     sum += el;
-                    matrix[i][j] = el;
+                    matrix[j] = el;
                 }
             }
-            matrix[i][i] = -sum;
+            matrix[i] = -sum;
             if (i == 0) {
-                matrix[i][i] += 1;
+                matrix[i] += 1;
             }
+            writeLine(bw, matrix);
         }
-        return matrix;
+        return new double[0][];
     }
 
     public void generate() {
-        for (int n = 15; n < 1000; n += 50) {
-            double[][] matrix = generateMatrix(n);
-            printMatrix(matrix, 52, n, -1);
+        int[] sizes = {/*15, 50, 200, 500, 1000, 2000, 5000,*/ (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+        for (int n : sizes) {
+            generateMatrix(n);
         }
     }
 }
