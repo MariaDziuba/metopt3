@@ -131,14 +131,14 @@ public class Evaluator {
 
 
     public static void main(String[] args) {
-//        generateMatrixes();
-        firstEx();
+        generateMatrixes();
+//        firstEx();
 //        secondEx(true);
 //        secondEx(false);
 //        fourthEx();
 //        fifthEx1();
 //        fifthEx234(2);
-//        fifthEx234(3);
+        fifthEx234(3);
 //        fifthEx234(4);
     }
 
@@ -254,9 +254,9 @@ public class Evaluator {
                 return;
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth" + ex + ".txt"))) {
-            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
             for (int n : sizes) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/out/matrices/" + folder + "/n" + n + ".txt"))) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/" + folder + "/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
