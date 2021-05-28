@@ -5,18 +5,6 @@ import src.matrix.SparseSLAEMatrix;
 public class VectorUtils {
 
     //ok
-    public static double[] multiplyVectorOnScalar(SparseSLAEMatrix matrix, double[] vect) {
-        int l = matrix.getColumnNumbers();
-        double[] res = new double[l];
-        for (int i = 0; i < l; i++) {
-            for (int j = 0; j < l; j++) {
-                res[i] += matrix.get(i, j) * vect[j];
-            }
-        }
-        return res;
-    }
-
-    //ok
     public static double[] subtractVectors(double[] vect1, double[] vect2) {
         double[] res = new double[vect1.length];
         for (int i = 0; i < vect1.length; i++) {
