@@ -121,9 +121,13 @@ public class SparseSLAEMatrix implements Matrix{
         return cnt;
     }
 
+    //ok
     public double[] smartMultiplication(double[] vector) {
         int leftBorderInJa = 0;
         double[] res = new double[vector.length];
+        for (int i = 0; i < vector.length; i++) {
+            res[i] = 0.0;
+        }
         for (int i = 0; i < n; i++) {
             int cnt = ia[i + 1] - ia[i];
             res[i] += d[i] * vector[i];

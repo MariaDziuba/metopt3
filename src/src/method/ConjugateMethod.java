@@ -5,6 +5,8 @@ import static src.utils.VectorUtils.*;
 
 public class ConjugateMethod implements Method {
 
+    private double EPS = 1e-14;
+
     SparseSLAEMatrix sparseMatrix;
     double[] f;
     long actions = 0;
@@ -19,9 +21,12 @@ public class ConjugateMethod implements Method {
         actions = 0;
         double[] x0 = new double[f.length];
         x0[0] = 1;
+        for (int i = 1; i < f.length; i++) {
+            x0[i] = 0.0;
+        }
         double[] r0 = subtractVectors(f, sparseMatrix.smartMultiplication(x0));
         double[] z0 = r0;
-        int MAX_ITERATIONS = 3000;
+        int MAX_ITERATIONS = 500;
         for (int k = 1; k < MAX_ITERATIONS; k++) {
             actions++;
             double[] Az0 = sparseMatrix.smartMultiplication(z0);
@@ -32,7 +37,7 @@ public class ConjugateMethod implements Method {
 
             double betaK = scalarProduct(rK, rK) / scalarProduct(r0, r0);
             double[] zK = sumVectors(rK, multiplyVectorOnScalar(betaK, z0));
-            if (Math.sqrt(scalarProduct(rK, rK) / scalarProduct(f, f)) < EPS) {
+            if (Math.sqrt(scalarProduct(rK, rK) / scalarProduct(f, f)) <= EPS) {
                 return xK;
             }
             x0 = xK;

@@ -5,10 +5,4 @@ out/*
 .DS_Store
 .DS_Store?
 
-src/src/SLAEMethod.java
-src/src/test1
-src/src/test2
-src/src/test3
-
-in.txt
-out.txt
+src/matrices/53/*

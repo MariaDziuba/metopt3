@@ -16,6 +16,9 @@ public class Evaluator {
     SparseSLAEMatrix sparseSLAEMatrix;
     double[][] denseMatrix;
     double[] b;
+    static String contentRoot = "/Users/maria/Desktop/metopt3";
+//    String contentRoot = "/home/valrun/IdeaProjects/metopt3"
+
 
 
     LUMethod luMethod;
@@ -131,7 +134,7 @@ public class Evaluator {
 
 
     public static void main(String[] args) {
-        generateMatrixes();
+//        generateMatrixes();
 //        firstEx();
 //        secondEx(true);
 //        secondEx(false);
@@ -175,11 +178,11 @@ public class Evaluator {
     }
 
     private static void secondEx(boolean isSecond) {
-        String path = isSecond ? "/home/valrun/IdeaProjects/metopt3/src/result/second.txt" : "/home/valrun/IdeaProjects/metopt3/src/result/third.txt";
+        String path = isSecond ? contentRoot + "/src/result/second.txt" : contentRoot + "/src/result/third.txt";
         try (PrintWriter pw = new PrintWriter(new FileWriter(path))) {
             for (int n = 15; n < 1000; n += 50) {
                 if (!isSecond) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/3/n" + n + ".txt"))) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/3/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
@@ -188,7 +191,7 @@ public class Evaluator {
                     }
                 } else {
                     for (int k = 0; k < 7; k++) {
-                        try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
+                        try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
                             pw.print(n + ", " + k + ", ");
                             Evaluator evaluator = new Evaluator();
                             evaluator.read(br);
@@ -204,10 +207,10 @@ public class Evaluator {
     }
 
     private static void fourthEx() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fourth.txt"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(contentRoot + "/src/result/fourth.txt"))) {
             for (int n = 15; n < 1000; n += 100) {
                 for (int k = 0; k < 7; k += 3) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/2/k" + k + "/n" + n + ".txt"))) {
                         pw.print(n + ", " + k + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
@@ -223,9 +226,9 @@ public class Evaluator {
 
     private static void fifthEx1() {
 //        todo(Is it right NaN in result)
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth1.txt"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(contentRoot + "/src/result/fifth1.txt"))) {
             for (int n = 5; n < 55; n += 5) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/0/n" + n + ".txt"))) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/0/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
@@ -253,10 +256,10 @@ public class Evaluator {
             default:
                 return;
         }
-        try (PrintWriter pw = new PrintWriter(new FileWriter("/home/valrun/IdeaProjects/metopt3/src/result/fifth" + ex + ".txt"))) {
-            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
+        try (PrintWriter pw = new PrintWriter(new FileWriter(contentRoot + "/src/result/fifth" + ex + ".txt"))) {
+            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, /*(int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
             for (int n : sizes) {
-                    try (BufferedReader br = Files.newBufferedReader(Paths.get("/home/valrun/IdeaProjects/metopt3/src/matrices/" + folder + "/n" + n + ".txt"))) {
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/" + folder + "/n" + n + ".txt"))) {
                         pw.print(n + ", ");
                         Evaluator evaluator = new Evaluator();
                         evaluator.read(br);
