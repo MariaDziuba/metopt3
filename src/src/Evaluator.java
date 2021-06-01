@@ -8,10 +8,7 @@ import src.method.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Evaluator {
 
@@ -19,8 +16,8 @@ public class Evaluator {
     SparseSLAEMatrix sparseSLAEMatrix;
     double[][] denseMatrix;
     double[] b;
-    static String contentRoot = "/Users/maria/Desktop/metopt3";
-//    String contentRoot = "/home/valrun/IdeaProjects/metopt3"
+//    static String contentRoot = "/Users/maria/Desktop/metopt3";
+    static String contentRoot = "/home/valrun/IdeaProjects/metopt3";
 
 
 
@@ -30,7 +27,7 @@ public class Evaluator {
     int n;
 
     private static void generateMatrixes() {
-        List<AbstractGenerator> generators = List.of(/*new Generator(), new Generator2(), new Generator3(), new Generator52(),*/ new Generator53());
+        List<AbstractGenerator> generators = List.of(/*new Generator(), new Generator2(),*/ new Generator3(), new Generator52(), new Generator53());
         for (AbstractGenerator generator : generators) {
             generator.generate();
         }
@@ -124,9 +121,12 @@ public class Evaluator {
             }
 
             pw.print(conjugateMethod.getActions() + ", ");
-            pw.print((String.format(format, Math.sqrt(quadSumXRes))) + ", ");
-            pw.print((String.format(format, Math.sqrt(quadSumXRes) / Math.sqrt(quadSumX))) + ", ");
-            pw.print((String.format(format, (Math.sqrt(quadSumXRes) * Math.sqrt(quadSumF)) / (Math.sqrt(quadSumX) * Math.sqrt(quadSumFRes)))));
+            double sqrtQuadSumXRes = Math.sqrt(quadSumXRes);
+            double sqrtQuadSumX = Math.sqrt(quadSumX);
+
+            pw.print((String.format(format, sqrtQuadSumXRes)) + ", ");
+            pw.print((String.format(format, sqrtQuadSumXRes / sqrtQuadSumX)) + ", ");
+            pw.print((String.format(format, (sqrtQuadSumXRes / sqrtQuadSumX) / (Math.sqrt(quadSumFRes) / Math.sqrt(quadSumF)))));
         }
     }
 
@@ -145,7 +145,7 @@ public class Evaluator {
 //        fifthEx1();
 //        fifthEx234(2);
         fifthEx234(3);
-//        fifthEx234(4);
+        fifthEx234(4);
     }
 
     private static void firstEx() {
@@ -228,7 +228,6 @@ public class Evaluator {
     }
 
     private static void fifthEx1() {
-//        todo(Is it right NaN in result)
         try (PrintWriter pw = new PrintWriter(new FileWriter(contentRoot + "/src/result/fifth1.txt"))) {
             for (int n = 5; n < 55; n += 5) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/0/n" + n + ".txt"))) {
@@ -260,7 +259,7 @@ public class Evaluator {
                 return;
         }
         try (PrintWriter pw = new PrintWriter(new FileWriter(contentRoot + "/src/result/fifth" + ex + ".txt"))) {
-            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, /*(int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
+            int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
             for (int n : sizes) {
                     try (BufferedReader br = Files.newBufferedReader(Paths.get(contentRoot + "/src/matrices/" + folder + "/n" + n + ".txt"))) {
                         pw.print(n + ", ");

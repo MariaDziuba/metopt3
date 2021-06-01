@@ -23,7 +23,7 @@ public class Generator3 extends AbstractGenerator {
      * @inheritDoc
      */
     public void generate() {
-        int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+        int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4, /*(int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
         for (int n : sizes) {
             double[][] matrix = generateMatrix(n);
             printMatrix(matrix, 3, n, -1);

@@ -11,33 +11,33 @@ public class Generator52 extends AbstractGenerator {
      * @inheritDoc
      */
     public double[][] generateMatrix(int n) {
-        double[] matrix = new double[n];
-        BufferedWriter bw = getBW(52, n, -1);
+        double[][] matrix = new double[n][n];
         for (int i = 0; i < n; i++) {
             int sum = 0;
             for (int j = 0; j < n; j++) {
                 if (i != j) {
                     int el = (int) (Math.random() * 5) * -1;
                     sum += el;
-                    matrix[j] = el;
+                    matrix[i][j] = el;
                 }
             }
-            matrix[i] = -sum;
+            matrix[i][i] = -sum;
             if (i == 0) {
-                matrix[i] += 1;
+                matrix[i][i] += 1;
             }
-            writeLine(bw, matrix);
         }
-        return new double[0][];
+        return matrix;
     }
 
     /**
      * @inheritDoc
      */
     public void generate() {
-        int[] sizes = {/*15, 50, 200, 500, 1000, 2000, 5000,*/ (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+        double[][] matrix;
+        int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
         for (int n : sizes) {
-            generateMatrix(n);
+            matrix = generateMatrix(n);
+            printMatrix(matrix, 52, n, -1);
         }
     }
 }

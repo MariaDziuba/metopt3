@@ -34,7 +34,7 @@ public class Generator53 extends AbstractGenerator {
      */
     public void generate() {
         double[][] matrix;
-        int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5};
+        int[] sizes = {15, 50, 200, 500, 1000, 2000, 5000, (int) 1e4/*, (int) (2.5 * 1e4), 5 * (int) 1e4, (int) (7.5 * 1e4), (int) 1e5*/};
         for (int n : sizes) {
             matrix = generateMatrix(n);
             printMatrix(matrix, 53, n, -1);

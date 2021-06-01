@@ -22,12 +22,3 @@
 * [Матрица Гильберта](src/src/generator/Generator3.java)
 * [Бонус: матрица с диагональным проебладанием](src/src/generator/Generator52.java)
 * [Бонус: матрица с обратным знаком внедиагональных элементов](src/src/generator/Generator53.java)
-
-### Файлы с входными и выходными данными
-2. [входные данные](out/matrices/2) | [выходные данные](src/result/second.txt)
-3. [входные данные](out/matrices/3) | [выходные данные](src/result/third.txt)
-4. [входные данные](out/matrices/2) | [выходные данные](src/result/fourth.txt)
-5. 1. [входные данные](out/matrices/0) | [выходные данные](src/result/fifth1.txt)
-    2. [входные данные](out/matrices/52) | [выходные данные](src/result/fifth2.txt)
-    3. [входные данные](out/matrices/53) | [выходные данные](src/result/fifth3.txt)
-    4. [входные данные](out/matrices/3) | [выходные данные](src/result/fifth4.txt)
