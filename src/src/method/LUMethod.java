@@ -4,7 +4,27 @@ import src.matrix.Matrix;
 import src.matrix.ProfileSLAEMatrix;
 import src.matrix.LU;
 
-public class LUMethod implements Method{
+/**
+ * Метод на основе LU-разложения
+ *
+ * Метод опирается на возможность представления квадратной матрицы A системы
+ * в виде произведения двух треугольных матриц.
+ * (L — нижняя, a U — верхняя треугольные матрицы)
+ *
+ * Решение системы сводится к последовательному решению двух простых систем с
+ * треугольными матрицами. В итоге процедура решения состоит из двух этапов.
+ *
+ * Прямой ход. Произведение Ux обозначим через y. В результате решения системы
+ * Ly=b находится вектор y
+ *
+ * Обратный ход. В результате решения системы Ux=y находится решение задачи —
+ * столбец x
+ *
+ * В силу треугольности матриц L и U решения обеих систем находятся рекуррентно
+ * (как в обратном ходе метода Гаусса).
+ *
+ */
+public class LUMethod implements Method {
 
     double EPS = 1e-20;
     ProfileSLAEMatrix profileMatrix;
@@ -44,6 +64,9 @@ public class LUMethod implements Method{
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public double[] findSolutions() {
         actions = 0;
@@ -63,6 +86,9 @@ public class LUMethod implements Method{
         return x;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public long getActions() {
         return actions;

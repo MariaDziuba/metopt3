@@ -6,8 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Абстрактный класс для генерации матриц
+ */
 public abstract class AbstractGenerator {
 
+    /**
+     * Умножает данную матрицу на заранее известный вектор Х
+     */
     public double[] multiplyOnVectorX(double[][] matrix) {
         int n = matrix.length;
         double[] f = new double[n];
@@ -19,6 +25,9 @@ public abstract class AbstractGenerator {
         return f;
     }
 
+    /**
+     * Умножает данную матрицу на данный вектор
+     */
     public double[] multiplyOnVector(double[][] matrix, double[] vector) {
         int n = matrix.length;
         double[] f = new double[n];
@@ -30,6 +39,11 @@ public abstract class AbstractGenerator {
         return f;
     }
 
+    /**
+     * Печатает матрицу для данного номера задания
+     * n - размер матрицы
+     * k - заданный параметр генерации
+     */
     public void printMatrix(double[][] matrix, int exercise, int n, int k) {
         double[] f = multiplyOnVectorX(matrix);
         String matrixPath =  "src/matrices" + "/" + exercise + (exercise == 2 ? "/k" + k : "") + "/n" + n + ".txt";
@@ -57,6 +71,9 @@ public abstract class AbstractGenerator {
         }
     }
 
+    /**
+     * Возвращает текущий {@link BufferedWriter}
+     */
     public BufferedWriter getBW(int exercise, int n, int k) {
         String matrixPath =  "src/matrices" + "/" + exercise + (exercise == 2 ? "/k" + k : "") + "/n" + n + ".txt";
         Path path = Paths.get(matrixPath);
@@ -77,6 +94,9 @@ public abstract class AbstractGenerator {
         return null;
     }
 
+    /**
+     * Печатает вектор в строку
+     */
     public void writeLine(BufferedWriter bw, double[] vector) {
         try {
             for (double v : vector) {
@@ -88,6 +108,9 @@ public abstract class AbstractGenerator {
         }
     }
 
+    /**
+     * Закрывает данный {@link BufferedWriter}
+     */
     public void closeBW(BufferedWriter bw) {
         try {
             bw.write("\n");
@@ -97,6 +120,14 @@ public abstract class AbstractGenerator {
         }
     }
 
+    /**
+     * Генерирует всё, что необходимо для текущего задания
+     */
     public abstract void generate();
+
+    /**
+     * Генерирует матрицу
+     * @param n - размер матрицы
+     */
     public abstract double[][] generateMatrix(int n);
 }

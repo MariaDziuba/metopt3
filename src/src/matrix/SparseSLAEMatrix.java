@@ -3,35 +3,43 @@ package src.matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Разреженная-строчно столбцовая матрица
+ */
 public class SparseSLAEMatrix implements Matrix {
 
     private double EPS = 1e-14;
+    // внедиагональные элементы
     private final List<Double> al;
     private final List<Double> au;
+    // диагональные элементы
     private final List<Double> d;
+    // индексы, с которого начинаются элементы k-ой строки/столбца
+    // в массивах ja, al, au
     private final List<Integer> ia;
+    // номера столбцов/строк хранимых внедиагональных элементов
+    // нижнего/верхнего треугольника матрицы
     private final List<Integer> ja;
     private int n;
     private int countIterations = 0;
 
     public SparseSLAEMatrix(final double[][] matrix) {
         n = matrix.length;
-        this.d = evaluateDiagonal(matrix);
+        this.d = makeD(matrix);
         this.ia = new ArrayList<>();
         final List<Double> all = new ArrayList<>();
         final List<Double> auu = new ArrayList<>();
         final List<Integer> jaa = new ArrayList<>();
-        evaluateIa(matrix, all, auu, jaa);
+        makeIa(matrix, all, auu, jaa);
         this.al = all;
         this.au = auu;
         this.ja = jaa;
     }
 
-    private void evaluateIa(double[][] matrix,
-                            List<Double> all,
-                            List<Double> auu,
-                            List<Integer> jaa) {
+    private void makeIa(double[][] matrix,
+                        List<Double> all,
+                        List<Double> auu,
+                        List<Integer> jaa) {
         ia.add(0);
         ia.add(0);
         for (int i = 1; i < matrix.length; i++) {
@@ -40,6 +48,9 @@ public class SparseSLAEMatrix implements Matrix {
 
     }
 
+    /**
+     * Возвращает длину профиля
+     */
     private int getProfileLen(double[][] matrix,
                               int row,
                               List<Double> all,
@@ -57,7 +68,7 @@ public class SparseSLAEMatrix implements Matrix {
         return ans;
     }
 
-    private List<Double> evaluateDiagonal(double[][] matrix) {
+    private List<Double> makeD(double[][] matrix) {
         final List<Double> b = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             b.add(matrix[i][i]);
@@ -66,6 +77,9 @@ public class SparseSLAEMatrix implements Matrix {
     }
 
     //ok
+    /**
+     * Умножение на данный вектор
+     */
     public double[] smartMultiplication(double[] vector) {
         int leftBorderInJa = 0;
         double[] res = new double[vector.length];
@@ -86,12 +100,13 @@ public class SparseSLAEMatrix implements Matrix {
     }
 
 
-
     public int getIterations() {
         return countIterations;
     }
 
-
+    /**
+     * @inheritDoc
+     */
     public double get(int i, int j) {
         if (i == j) {
             return d.get(i);
@@ -119,11 +134,17 @@ public class SparseSLAEMatrix implements Matrix {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int size() {
         return n;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void set(int i, int j, double val) {
         throw new UnsupportedOperationException();

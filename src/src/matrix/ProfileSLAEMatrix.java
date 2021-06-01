@@ -1,10 +1,16 @@
 package src.matrix;
 
-public class ProfileSLAEMatrix implements Matrix{
+/**
+ * Профильная матрица
+ */
+public class ProfileSLAEMatrix implements Matrix {
 
+    // диагональные элементы
     private double[] d;
+    // вгнедиагональные элементы
     private double[] al;
     private double[] au;
+    // профили
     private int[] ial, iau;
 
     public ProfileSLAEMatrix(double[][] matrix) {
@@ -69,6 +75,9 @@ public class ProfileSLAEMatrix implements Matrix{
     }
 
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public double get(int i, int j) {
         if (i == j) {
@@ -91,6 +100,9 @@ public class ProfileSLAEMatrix implements Matrix{
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void set(int i, int j, double val) {
         if (i == j) {
@@ -114,15 +126,24 @@ public class ProfileSLAEMatrix implements Matrix{
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int size() {
         return d.length;
     }
 
+    /**
+     * Индекс первого элемента в профиле матрицы L
+     */
     public int firstInProfileL(int i) {
         return i - (ial[i + 1] - ial[i]);
     }
 
+    /**
+     * Индекс первого элемента в профиле матрицы U
+     */
     int firstInProfileU(int i) {
         return i - (iau[i + 1] - iau[i]);
     }

@@ -1,10 +1,20 @@
 package src.generator;
 
+/**
+ * Генератор для задания 2
+ */
 public class Generator2 extends AbstractGenerator {
+
+    /**
+     * @inheritDoc
+     */
     public double[][] generateMatrix(int n) {
         return generateMatrix(n, 0);
     }
 
+    /**
+     * @inheritDoc
+     */
     public double[][] generateMatrix(int n, int k) {
         double[][] matrix = new double[n][n];
         for (int i = 0; i < n; i++) {
@@ -24,6 +34,9 @@ public class Generator2 extends AbstractGenerator {
         return matrix;
     }
 
+    /**
+     * @inheritDoc
+     */
     public void generate() {
         for (int n = 15; n < 1000; n += 50) {
             for (int k = 0; k < 7; k++) {

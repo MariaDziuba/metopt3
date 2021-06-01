@@ -1,9 +1,18 @@
 package src.matrix;
 
+/**
+ * Класс LU-разложения матрицы
+ */
 public class LU {
 
+    /**
+     * Матрица, которую нужно разложить
+     */
     ProfileSLAEMatrix matrix;
 
+    /**
+     * Нижнетреугольная матрица L
+     */
     public class L implements Matrix {
         @Override
         public double get(int i, int j) {
@@ -25,6 +34,9 @@ public class LU {
         }
     }
 
+    /**
+     * Вехнетреугольная матрица U
+     */
     public class U implements Matrix {
         @Override
         public double get(int i, int j) {
@@ -46,6 +58,10 @@ public class LU {
     public LU(ProfileSLAEMatrix matrix) {
         this.matrix = matrix;
     }
+
+    /**
+     * Делает LU-разложение матрицы
+     */
     public Matrix[] getLU() {
         for (int i = 1; i < matrix.size(); i++) {
             for (int j = matrix.firstInProfileL(i); j < i; j++) {

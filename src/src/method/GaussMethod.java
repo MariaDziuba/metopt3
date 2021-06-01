@@ -1,6 +1,23 @@
 package src.method;
 
-public class GaussMethod implements Method{
+/**
+ * Метод Гаусса с выбором главного элемента (наибольшего по модулю)
+ * (чтобы избежать сильного влияния вычислительной погрешности на решение)
+ * Это метод последовательного исключения переменных, когда с помощью
+ * элементарных преобразований система уравнений приводится к равносильной
+ * системе треугольного вида, из которой последовательно, начиная с
+ * последних (по номеру), находятся все переменные системы.
+ *
+ * Выбираем столбец слева направо. В текущем столбце находим сточку,
+ * у которой элемент в данном столбце наибольший, преобразуем этот элемент
+ * в единицу делением всей строки на его величину. Переносим эту строчку
+ * наверх. Затем обнуляем другие элементы текущего столбца – для этого
+ * вычитаем из оставшихся строк выбранную строчку, умноженную на элемент,
+ * который хотим занулить. Проделываем эту операцию n раз, не затрагивая
+ * столбцы, которые мы уже обнулили, и строчки, которые уже были перенесены
+ * наверх.
+ */
+public class GaussMethod implements Method {
     long actions = 0;
     int size;
 
@@ -14,6 +31,9 @@ public class GaussMethod implements Method{
         this.size = size;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public double[] findSolutions() {
         actions = 0;
@@ -26,11 +46,17 @@ public class GaussMethod implements Method{
         return x;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public long getActions() {
         return actions;
     }
 
+    /**
+     * Приводит матрицу к треугольному виду
+     */
     boolean makeUpperTriangular() {
         for (int k = 0; k < size; k++) {
             findLineWithLeadElement(k);
@@ -64,6 +90,9 @@ public class GaussMethod implements Method{
         }
     }
 
+    /**
+     * ведущий элемент
+     */
     private void findLineWithLeadElement(int k) {
         int leadElemIdx = k;
         for (int i = k; i < size; i++) {
